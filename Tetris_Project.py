@@ -33,7 +33,7 @@ import pygame
 #https://www.pygame.org/docs/ref/event.html
 #https://github.com/matachi/python-tetris/blob/master/main.py
 #http://www.discoveryplayground.com/computer-programming-for-kids/rgb-colors/
-
+#Image for main screen taken from: https://www.ubisoft.com/en-us/game/tetris-ultimate
 
 #Code taken from: https://pythonprogramming.net/pygame-start-menu-tutorial/
 #function(text_objects) is used to centre align the text of a button
