@@ -34,6 +34,7 @@
 #    27/11 10:28am    27/11 11:22am
 #    27/11 03:12pm    27/11 07:35pm
 #    27/11 09:11pm    27/11 11:08pm
+#    28/11 12:00pm    28/11 12:45pm
 # import the necessary libraries
 import pygame
 import random
@@ -375,6 +376,8 @@ lines = 0 # lines stores the number of non-zero rows removed
 
 p_count = 25 # p_count is the pixel size of the box for drawing the shapes
 
+tempo = 0 # tempo is used allow the shape to shift a bit after it hits a surface
+
 # The first shape and the shape after that are determined
 initial_shape = new_shape(All_shapes)
 current_shape_desc = initial_shape["shape"]
@@ -415,6 +418,7 @@ screen.blit(BackGround_MainScreen.image, BackGround_MainScreen.rect)
 
 # The following is an event type to appear on the event queue after every 1000 milliseconds
 pygame.time.set_timer(pygame.USEREVENT + 1, 1000)
+
 
 if play_music:
     file = 'maintheme.mp3' # the main sound being played in the background
@@ -545,6 +549,8 @@ while running:
             elif down and not collision_occured(board, current_shape_desc, shape_x, shape_y + 1):
                     shape_y += 1
                     myscore += 1
+                    if collision_occured_bottom(board, current_shape_desc, shape_x, shape_y):
+                        tempo = 100
                     
             # if the 'P' key is pressed, the opposite of the present state of the game pause is returned       
             elif paused:
@@ -553,7 +559,8 @@ while running:
         # pygame.USEREVENT +1: allows the block to automatically move downwards after one click, since it keeps
         # decrementing the value of the y-axis. It also updates the board by returning the new board if the rows
         # are removed and the corresponding change in myscore and lines removed.
-        elif event.type == pygame.USEREVENT + 1:
+        elif event.type == pygame.USEREVENT+1:
+            
             if start:
                 shape_y += 1
                 update = remove_row(board, myscore, lines, mute)
@@ -767,13 +774,17 @@ while running:
         # otherwise, the game continues
         if collide == False:
             if collision_occured_bottom(board, current_shape_desc, shape_x, shape_y):
-                place_shape(board, current_shape_desc, shape_x, shape_y+1, mute)
-                shape_x = 4
-                shape_y = 0
-                next_shape = next_predicted_shape
-                next_predicted_shape = new_shape(All_shapes)
-                current_shape_col = next_shape["color"]
-                current_shape_desc = next_shape["shape"]
+                if tempo<10:
+                    tempo = tempo+1
+                else:
+                    tempo=0
+                    place_shape(board, current_shape_desc, shape_x, shape_y+1, mute)
+                    shape_x = 4
+                    shape_y = 0
+                    next_shape = next_predicted_shape
+                    next_predicted_shape = new_shape(All_shapes)
+                    current_shape_col = next_shape["color"]
+                    current_shape_desc = next_shape["shape"]
 
 
             # the following segment draws the block at the bottom of the board when it is settled
